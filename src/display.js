@@ -62,6 +62,15 @@ function toDoInputField () {
     cancelButton.setAttribute("id", "cancel-button");
     cancelButton.textContent = "Cancel";
     parent.appendChild(cancelButton);
+
+    cancelButton.addEventListener('click', () => {
+        while(parent.firstChild) {
+            parent.removeChild(parent.lastChild);
+        }
+        parent.parentNode.removeChild(parent.parentNode.lastChild);
+        const content = document.getElementById('content');
+        content.appendChild(inputButtons());
+    });
 } 
 
 renderContent();
