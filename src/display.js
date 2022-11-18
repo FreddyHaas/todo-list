@@ -47,6 +47,10 @@ function createToDo (name, date, index) {
     const toDoTitle = document.createElement('button');
     toDoTitle.classList.add('todo-title');
     toDoTitle.textContent = `${name}`;
+    toDoTitle.addEventListener ('click', () => {
+        toDo.removeChild(toDoTitle);
+        toDo.insertBefore(titleInputField(index), toDoDate);
+    })
     toDo.appendChild(toDoTitle);
 
     // Date
@@ -85,6 +89,20 @@ function dateInputField (index) {
 }
 
 // Title
+
+function titleInputField (index) {
+    const input = document.createElement('INPUT');
+    input.setAttribute("type", "text");
+    input.setAttribute("id", "title-update");
+
+    input.addEventListener('change', () => {
+        dataBase.updateHandler(input.value, "title", index);
+        console.log(dataBase.content);
+        createToDoList(dataBase);
+    });
+
+    return input;
+}
 
 // 3. Add ToDo 
 
