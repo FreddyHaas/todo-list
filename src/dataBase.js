@@ -35,7 +35,11 @@ const dataBase = (() => {
         }
     }
 
-    return {content, getLength, getTitle, getDate, updateHandler, storeToDo};
+    const deleteToDo = (index) => {
+        content.splice(index, 1);
+    }
+
+    return {content, getLength, getTitle, getDate, updateHandler, storeToDo, deleteToDo};
 })();
 
 const ToDo = (name) => {

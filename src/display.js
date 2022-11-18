@@ -39,11 +39,12 @@ function createToDoList (project) {
     }
 }
 
+// 2 Display of inidividual ToDo
 function createToDo (name, date, index) {
     const toDo = document.createElement('div');
     toDo.classList.add('todo');
 
-    // Title
+    // Display title
     const toDoTitle = document.createElement('button');
     toDoTitle.classList.add('todo-title');
     toDoTitle.textContent = `${name}`;
@@ -53,7 +54,7 @@ function createToDo (name, date, index) {
     })
     toDo.appendChild(toDoTitle);
 
-    // Date
+    // Display date
     const toDoDate = document.createElement('button');
     toDoDate.classList.add('todo-date');
     if (date === undefined) {
@@ -64,16 +65,28 @@ function createToDo (name, date, index) {
     }
     toDoDate.addEventListener ('click', () => {
         toDo.removeChild(toDoDate);
-        toDo.appendChild(dateInputField(index));
+        toDo.insertBefore(dateInputField(index), completionButton);
     });
     toDo.appendChild(toDoDate);
+
+    // Display checkbox
+    const completionButton = document.createElement('input');
+    completionButton.setAttribute("type", "checkbox");
+    completionButton.classList.add('delete-button');
+    completionButton.addEventListener ('input', () => {
+        setTimeout(() => { 
+        dataBase.deleteToDo(index);
+        console.log(dataBase.content);
+        createToDoList(dataBase)}, 100);
+    })
+    toDo.appendChild(completionButton);
 
     return toDo;
 }
 
-// 2.1 Update existing ToDo
+// 2.1 Display input fields for updating date and title
 
-// Date
+// Update date
 function dateInputField (index) {
     const input = document.createElement('INPUT');
     input.setAttribute("type","date");
@@ -88,8 +101,7 @@ function dateInputField (index) {
     return input;
 }
 
-// Title
-
+// Update title
 function titleInputField (index) {
     const input = document.createElement('INPUT');
     input.setAttribute("type", "text");
@@ -106,6 +118,7 @@ function titleInputField (index) {
 
 // 3. Add ToDo 
 
+//Button
 function addToDoButton () {
     const inputButtons = document.createElement('div');
     inputButtons.setAttribute('id','todo-button');
@@ -124,14 +137,17 @@ function addToDoButton () {
     return inputButtons;
 }
 
+// Input form
 function toDoInputField () {
     parent = document.getElementById('todo-button');
 
+    // Input field
     const input = document.createElement('INPUT');
     input.setAttribute("type","text");
     input.setAttribute("id", "todo-input");
     parent.appendChild(input);
 
+    // Add button
     const addButton = document.createElement('button');
     addButton.setAttribute("id","add-button");
     addButton.textContent = "Add";
@@ -144,6 +160,7 @@ function toDoInputField () {
         resetInputField();
     })
 
+    // Cancel button
     const cancelButton = document.createElement('button');
     cancelButton.setAttribute("id", "cancel-button");
     cancelButton.textContent = "Cancel";
