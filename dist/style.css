@@ -95,11 +95,9 @@ li:hover, .selected {
     border-radius: 4px;
     background-color: var(--light-grey);
     font-size: 18px;
-    padding: 8px 8px;
-}
-
-#todo-input {
-    background: white;
+    padding: 8px 16px;
+    display: flex;
+    gap: 20px;
 }
 
 .todo:hover {
@@ -115,7 +113,7 @@ li:hover, .selected {
     gap: 5px;
 }
 
-#add-task {
+#add-todo {
     background: none;
     border: none;
     font-weight: 700;
@@ -124,7 +122,7 @@ li:hover, .selected {
     grid-column: 1 / 3;
 }
 
-#add-task:hover {
+#add-todo:hover {
     background: var(--light-grey);
 }
 
@@ -132,6 +130,7 @@ li:hover, .selected {
     border: solid 1px rgb(150, 150, 150);
     margin-bottom: 5px;
     grid-column: 1 / 3;
+    background: white;
 }
 
 #add-button, #cancel-button {
@@ -149,6 +148,20 @@ li:hover, .selected {
     background: var(--button-red);
 }
 
+.todo-title, .todo-date {
+    border: none;
+    font-size: inherit;
+    background: none;
+}
+
+.todo-title {
+    flex: 1 1 0;
+    text-align: left;
+}
+
+.todo-date, .checkbox {
+    flex: none;
+}
 
 
 
