@@ -1,43 +1,55 @@
-import dataBase from './dataBase.js'
+import {storeNewToDo, defaultProject} from './dataBase.js';
 
 function renderContent () {
     const content = document.getElementById ('content');
-    content.appendChild(createHeader("All")); // Input
-    content.appendChild(createToDoList(4, ["test1", "test2", "test3", "test4"])); // Input
-    content.appendChild(inputButtons());
+    content.appendChild(createHeader("All")); // Input   
+    content.appendChild(createToDoListContainer());
+    createToDoList(defaultProject); // Input
+    content.appendChild(addToDoButton());
+    
     return content;
 }
 
 function createHeader (name) {
     const contentHeader = document.createElement('p');
     contentHeader.textContent = `${name}`;
-
+    
     return contentHeader;
 }
 
-function createToDoList (number, names) {
-    const toDoList = document.createElement('div');
-    toDoList.classList.add('todo-list');
-    for (let i = 0; i < number; i++) {
-        const toDo = document.createElement('div');
-        toDo.textContent = `${names[i]}`;
-        toDo.classList.add('todo');
-        toDoList.appendChild(toDo);
-    }
-    return toDoList;
+function createToDoListContainer () {
+    const toDoListContainer = document.createElement('div');
+    toDoListContainer.classList.add('todo-list'); 
+    
+    return toDoListContainer
 }
 
-function inputButtons () {
+function createToDoList (project) {  
+    const toDoListContainer = document.querySelector('.todo-list');
+    
+    while (toDoListContainer.firstChild) {
+        toDoListContainer.removeChild(toDoListContainer.lastChild);
+        }
+    
+    for (let i = 0; i < project.getLength(); i++) {
+        const toDo = document.createElement('div');
+        toDo.textContent = `${project.getTitle(i)}`;
+        toDo.classList.add('todo');
+        toDoListContainer.appendChild(toDo);
+    }
+}
+
+function addToDoButton () {
     const inputButtons = document.createElement('div');
     inputButtons.setAttribute('id','todo-button');
 
-    const addButton = document.createElement('div');
-    addButton.classList.add('todo');
-    addButton.textContent = "+ Add ToDo";
-    addButton.setAttribute('id', 'add-task');
-    inputButtons.appendChild(addButton);
+    const addToDoButton = document.createElement('div');
+    addToDoButton.classList.add('todo');
+    addToDoButton.textContent = "+ Add ToDo";
+    addToDoButton.setAttribute('id', 'add-task');
+    inputButtons.appendChild(addToDoButton);
 
-    addButton.addEventListener('click', () => {
+    addToDoButton.addEventListener('click', () => {
         inputButtons.removeChild(inputButtons.lastChild);
         toDoInputField();
     });
@@ -58,20 +70,38 @@ function toDoInputField () {
     addButton.textContent = "Add";
     parent.appendChild(addButton);
 
+    addButton.addEventListener('click', () => {
+        storeNewToDo(readInput(input));
+        createToDoList(defaultProject); // Input
+        resetInputField();
+    })
+
     const cancelButton = document.createElement('button');
     cancelButton.setAttribute("id", "cancel-button");
     cancelButton.textContent = "Cancel";
     parent.appendChild(cancelButton);
 
     cancelButton.addEventListener('click', () => {
-        while(parent.firstChild) {
-            parent.removeChild(parent.lastChild);
-        }
-        parent.parentNode.removeChild(parent.parentNode.lastChild);
-        const content = document.getElementById('content');
-        content.appendChild(inputButtons());
+        resetInputField();
     });
 } 
 
+function resetInputField () {
+    const content = document.getElementById('content');
+    parent = document.getElementById('todo-button');
+
+    while(parent.firstChild) {
+        parent.removeChild(parent.lastChild);
+    }
+    parent.parentNode.removeChild(parent.parentNode.lastChild);
+    content.appendChild(addToDoButton());
+}
+
+function readInput (inputField) { 
+    var value = inputField.value;
+    console.log(value);
+    
+    return value;
+}
+
 renderContent();
-dataBase();
