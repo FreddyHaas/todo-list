@@ -1,6 +1,9 @@
+import {isToday} from 'date-fns'
+
+// Database
 const dataBase = (() => {
     const content = [];
-    
+
     const storeToDo = (name) => {
         const _newToDo = ToDo(name);
         content.push(_newToDo);
@@ -33,6 +36,7 @@ const dataBase = (() => {
         if (inputType === "title") {
             _updateTitle(index, value);
         }
+        updateDataSelections();
     }
 
     const deleteToDo = (index) => {
@@ -42,6 +46,26 @@ const dataBase = (() => {
     return {content, getLength, getTitle, getDate, updateHandler, storeToDo, deleteToDo};
 })();
 
+const toDosToday = (() => {
+    var content;
+    
+    const updateSelection = () => {
+        content = dataBase.content.filter((toDo) => {
+        return isToday(Date.parse(toDo.date))
+    })}
+
+    const {getLength} = dataBase;
+    const {getTitle} = dataBase;
+    const {getDate} = dataBase;
+
+    return {content, updateSelection, getLength, getTitle, getDate};
+})();
+
+function updateDataSelections () {
+    toDosToday.updateSelection();
+};
+
+// ToDo object
 const ToDo = (name) => {
     const date = undefined;
     const project = undefined;
@@ -53,4 +77,4 @@ const ToDo = (name) => {
 // Initial example project
 dataBase.storeToDo('Example');
 
-export default dataBase;
+export {dataBase, toDosToday};

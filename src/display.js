@@ -1,19 +1,56 @@
-import dataBase from './dataBase.js';
+import {dataBase, toDosToday}  from './dataBase.js';
+import {format} from'date-fns';
+
+// Rendering content
+var currentToDoSelection = dataBase; // Selection of ToDos (e.g. ToDos due today) that is currently displayed
+var headerName = "All";
+
+const initializeContent = (() => {
+    renderContent ("All");
+
+    const all = document.getElementById('all');
+    all.addEventListener('click', () => {
+        displayHandler ("All");
+        renderContent ();
+    })
+
+    const today = document.getElementById('today');
+    today.addEventListener('click', () => {
+        displayHandler ("Today");
+        renderContent ();
+    })
+    
+})();
 
 function renderContent () {
     const content = document.getElementById ('content');
-    content.appendChild(createHeader("All")); // Input   
+    while (content.firstChild) {
+        content.removeChild(content.lastChild);
+    }
+
+    content.appendChild(createHeader());   
     content.appendChild(createToDoListContainer());
-    createToDoList(dataBase); // Input
+    createToDoList();
     content.appendChild(addToDoButton());
     
     return content;
 }
 
+function displayHandler (section) {
+    if (section === "All") {
+        currentToDoSelection = dataBase;
+        headerName = section;
+    }
+    if (section === "Today") {  
+        currentToDoSelection = toDosToday;
+        headerName = section;
+    }
+}
+
 // 1. Header
-function createHeader (name) {
+function createHeader () {
     const contentHeader = document.createElement('p');
-    contentHeader.textContent = `${name}`;
+    contentHeader.textContent = `${headerName}`;
     
     return contentHeader;
 }
@@ -26,15 +63,15 @@ function createToDoListContainer () {
     return toDoListContainer
 }
 
-function createToDoList (project) {  
+function createToDoList () {  
     const toDoListContainer = document.querySelector('.todo-list');
     
     while (toDoListContainer.firstChild) {
         toDoListContainer.removeChild(toDoListContainer.lastChild);
         }
     
-    for (let i = 0; i < project.getLength(); i++) {
-        const toDo = createToDo(project.getTitle(i), project.getDate(i), i);
+    for (let i = 0; i < currentToDoSelection.getLength(); i++) {
+        const toDo = createToDo(currentToDoSelection.getTitle(i), currentToDoSelection.getDate(i), i);
         toDoListContainer.appendChild(toDo);
     }
 }
@@ -61,7 +98,7 @@ function createToDo (name, date, index) {
         toDoDate.textContent = `No date`;
     }
     else {
-        toDoDate.textContent = `${date}`;
+        toDoDate.textContent = `${format(Date.parse(date), 'dd/MM/yyyy')}`;
     }
     toDoDate.addEventListener ('click', () => {
         toDo.removeChild(toDoDate);
@@ -72,12 +109,11 @@ function createToDo (name, date, index) {
     // Display checkbox
     const completionButton = document.createElement('input');
     completionButton.setAttribute("type", "checkbox");
-    completionButton.classList.add('delete-button');
+    completionButton.classList.add('checkbox');
     completionButton.addEventListener ('input', () => {
         setTimeout(() => { 
         dataBase.deleteToDo(index);
-        console.log(dataBase.content);
-        createToDoList(dataBase)}, 100);
+        createToDoList()}, 100);
     })
     toDo.appendChild(completionButton);
 
@@ -94,8 +130,7 @@ function dateInputField (index) {
 
     input.addEventListener('input', () => {
         dataBase.updateHandler(input.value, "date", index);
-        console.log(dataBase.content);
-        createToDoList(dataBase);
+        createToDoList();
     });
     
     return input;
@@ -109,8 +144,7 @@ function titleInputField (index) {
 
     input.addEventListener('change', () => {
         dataBase.updateHandler(input.value, "title", index);
-        console.log(dataBase.content);
-        createToDoList(dataBase);
+        createToDoList();
     });
 
     return input;
@@ -155,8 +189,7 @@ function toDoInputField () {
 
     addButton.addEventListener('click', () => {
         dataBase.storeToDo(input.value);
-        console.log(dataBase.content);
-        createToDoList(dataBase);
+        createToDoList();
         resetInputField();
     })
 
@@ -182,4 +215,4 @@ function resetInputField () {
     content.appendChild(addToDoButton());
 }
 
-renderContent();
+export default initializeContent;
