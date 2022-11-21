@@ -36,7 +36,8 @@ const dataBase = (() => {
         if (inputType === "title") {
             _updateTitle(index, value);
         }
-        updateDataSelections();
+        toDosToday.updateSelection();
+        console.log(`Content in UpdateHandler ${toDosToday.content}`);
     }
 
     const deleteToDo = (index) => {
@@ -50,9 +51,11 @@ const toDosToday = (() => {
     var content;
     
     const updateSelection = () => {
+        console.log(`Content inside function ${content}`)
         content = dataBase.content.filter((toDo) => {
         return isToday(Date.parse(toDo.date))
-    })}
+    })
+    console.log(content)};
 
     const {getLength} = dataBase;
     const {getTitle} = dataBase;

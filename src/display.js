@@ -18,6 +18,15 @@ const initializeContent = (() => {
     today.addEventListener('click', () => {
         displayHandler ("Today");
         renderContent ();
+        console.log(currentToDoSelection.content);
+
+    // This week
+   
+    const addProject = document.getElementById('add-project');
+    addProject.addEventListener('click', () => {
+        console.log('Success');
+        projectInputField();
+    })
     })
     
 })();
@@ -76,7 +85,7 @@ function createToDoList () {
     }
 }
 
-// 2 Display of inidividual ToDo
+// 2.1 Display of inidividual ToDo
 function createToDo (name, date, index) {
     const toDo = document.createElement('div');
     toDo.classList.add('todo');
@@ -120,7 +129,7 @@ function createToDo (name, date, index) {
     return toDo;
 }
 
-// 2.1 Display input fields for updating date and title
+// 2.2 Display input fields for updating date and title
 
 // Update date
 function dateInputField (index) {
@@ -190,7 +199,7 @@ function toDoInputField () {
     addButton.addEventListener('click', () => {
         dataBase.storeToDo(input.value);
         createToDoList();
-        resetInputField();
+        resetToDoInputField();
     })
 
     // Cancel button
@@ -200,11 +209,11 @@ function toDoInputField () {
     parent.appendChild(cancelButton);
 
     cancelButton.addEventListener('click', () => {
-        resetInputField();
+        resetToDoInputField();
     });
 } 
 
-function resetInputField () {
+function resetToDoInputField () {
     const content = document.getElementById('content');
     parent = document.getElementById('todo-button');
 
@@ -213,6 +222,37 @@ function resetInputField () {
     }
     parent.parentNode.removeChild(parent.parentNode.lastChild);
     content.appendChild(addToDoButton());
+}
+
+// 4. Add Project
+function projectInputField () {
+    parent = document.querySelector('.projects');
+
+    // Input field
+    const input = document.createElement('INPUT');
+    input.setAttribute("type","text");
+    input.setAttribute("id", "project-input");
+    parent.appendChild(input);
+
+    // Add button
+    const addButton = document.createElement('button');
+    addButton.setAttribute("id","add-button");
+    addButton.textContent = "Add";
+    parent.appendChild(addButton);
+
+    addButton.addEventListener('click', () => {
+        console.log('Success'); // Adapt
+    })
+
+    // Cancel button
+    const cancelButton = document.createElement('button');
+    cancelButton.setAttribute("id", "cancel-button");
+    cancelButton.textContent = "Cancel";
+    parent.appendChild(cancelButton);
+
+    cancelButton.addEventListener('click', () => {
+        parent.parent.removeChild(parent.parent.lastChild);
+    });
 }
 
 export default initializeContent;

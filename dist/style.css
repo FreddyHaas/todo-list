@@ -96,7 +96,8 @@ li:hover, .selected {
     background-color: var(--light-grey);
     font-size: 18px;
     padding: 8px 16px;
-    display: flex;
+    display: grid;
+    grid-template-columns: 1fr auto auto;
     gap: 20px;
 }
 
@@ -155,8 +156,11 @@ li:hover, .selected {
 }
 
 .todo-title {
-    flex: 1 1 0;
     text-align: left;
+}
+
+#title-update {
+    width: 150px;
 }
 
 .todo-date, .checkbox {
