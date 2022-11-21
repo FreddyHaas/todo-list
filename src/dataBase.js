@@ -1,6 +1,8 @@
+import {storeData, getData} from "./storage";
+
 // Database
 const dataBase = (() => {
-    const content = [];
+    const toDos = [];
 
     const projects = []
 
@@ -10,31 +12,26 @@ const dataBase = (() => {
 
     const storeToDo = (name, project) => {
         const _newToDo = ToDo(name, project);
-        content.push(_newToDo);
+        toDos.push(_newToDo);
+        storeData();
     }
 
-    const _updateDate = (index, value) => {
-        content[index].date = value;
+    const updateDate = (value, index) => {
+        toDos[index].date = value;
+        storeData();
     }
 
-    const _updateTitle = (index, value) => {
-        content[index].title = value;
-    }
-
-    const updateHandler = (value, inputType, index) => { // Raus schmeißen
-        if (inputType === "date") {
-            _updateDate(index, value);
-        }
-        if (inputType === "title") {
-            _updateTitle(index, value);
-        }
+    const updateTitle = (value, index) => {
+        toDos[index].title = value;
+        storeData();
     }
 
     const deleteToDo = (index) => {
-        content.splice(index, 1);
+        toDos.splice(index, 1);
+        storeData();
     }
 
-    return {content, projects, storeProject, storeToDo, updateHandler, deleteToDo};
+    return {toDos, projects, storeProject, storeToDo, updateDate, updateTitle, deleteToDo};
 })();
 
 // ToDo object
@@ -48,5 +45,8 @@ const ToDo = (name, projectName) => {
 
 // Initial example project
 dataBase.storeToDo('Example');
+
+let existingData = getData();
+console.log(JSON.parse(existingData));
 
 export {dataBase};

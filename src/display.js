@@ -39,9 +39,8 @@ function renderContent () {
         content.removeChild(content.lastChild);
     }
 
-    content.appendChild(createHeader(section));   
-    content.appendChild(createToDoListContainer());
-    createToDoList(section);
+    content.appendChild(createHeader());   
+    content.appendChild(createToDoList());
     content.appendChild(addToDoButton());
     
     return content;
@@ -56,59 +55,52 @@ function createHeader () {
 }
 
 // 2. ToDo List
-function createToDoListContainer () {
-    const toDoListContainer = document.createElement('div');
-    toDoListContainer.classList.add('todo-list'); 
-    
-    return toDoListContainer
-}
 
 function createToDoList () {  
-    const toDoListContainer = document.querySelector('.todo-list');
+    const toDoListContainer = document.createElement('div');
+    toDoListContainer.classList.add('todo-list');     
 
-    console.log(dataBase.content);
-    
     while (toDoListContainer.firstChild) {
         toDoListContainer.removeChild(toDoListContainer.lastChild);
         }
     
     if (section === "All") {
-        for (let i = 0; i < dataBase.content.length; i++) {
-            const toDo = createToDo(dataBase.content[i].title, dataBase.content[i].date, i);
+        for (let i = 0; i < dataBase.toDos.length; i++) {
+            const toDo = createToDo(dataBase.toDos[i].title, dataBase.toDos[i].date, i);
             toDoListContainer.appendChild(toDo);
         }
     }
 
     else if (section === "Today") {
-        for (let i = 0; i < dataBase.content.length; i++) {
-            if (isToday(Date.parse(dataBase.content[i].date))){
-                const toDo = createToDo(dataBase.content[i].title, dataBase.content[i].date, i);
+        for (let i = 0; i < dataBase.toDos.length; i++) {
+            if (isToday(Date.parse(dataBase.toDos[i].date))){
+                const toDo = createToDo(dataBase.toDos[i].title, dataBase.toDos[i].date, i);
                 toDoListContainer.appendChild(toDo);
             }   
         }
     }
 
     else if (section === "This week") {
-        for (let i = 0; i < dataBase.content.length; i++) {
-            if (isThisWeek(Date.parse(dataBase.content[i].date))){
-                const toDo = createToDo(dataBase.content[i].title, dataBase.content[i].date, i);
+        for (let i = 0; i < dataBase.toDos.length; i++) {
+            if (isThisWeek(Date.parse(dataBase.toDos[i].date))){
+                const toDo = createToDo(dataBase.toDos[i].title, dataBase.toDos[i].date, i);
                 toDoListContainer.appendChild(toDo);
             }   
         } 
     }
 
     else {
-        for (let i = 0; i < dataBase.content.length; i++) {
-            if (dataBase.content[i].project === section){
-                const toDo = createToDo(dataBase.content[i].title, dataBase.content[i].date, i);
+        for (let i = 0; i < dataBase.toDos.length; i++) {
+            if (dataBase.toDos[i].project === section){
+                const toDo = createToDo(dataBase.toDos[i].title, dataBase.toDos[i].date, i);
                 toDoListContainer.appendChild(toDo);
             }   
         }
     }
-
+return toDoListContainer;
 }
 
-// 2 Display of inidividual ToDo
+// 2.1 Display of inidividual ToDo
 function createToDo (name, date, index) {
     const toDo = document.createElement('div');
     toDo.classList.add('todo');
@@ -152,7 +144,7 @@ function createToDo (name, date, index) {
     return toDo;
 }
 
-// 2.1 Display input fields for updating date and title
+// 2.2 Display input fields for updating date and title
 
 // Update date
 function dateInputField (index) {
@@ -161,7 +153,8 @@ function dateInputField (index) {
     input.setAttribute("id", "todo-date");
 
     input.addEventListener('input', () => {
-        dataBase.updateHandler(input.value, "date", index);
+        console.log(input.value);
+        dataBase.updateDate(input.value, index);
         renderContent();
     });
     
@@ -175,7 +168,7 @@ function titleInputField (index) {
     input.setAttribute("id", "title-update");
 
     input.addEventListener('change', () => {
-        dataBase.updateHandler(input.value, "title", index);
+        dataBase.updateTitle(input.value, index);
         renderContent();
     });
 
@@ -231,20 +224,9 @@ function toDoInputField () {
     parent.appendChild(cancelButton);
 
     cancelButton.addEventListener('click', () => {
-        resetInputField();
+        renderContent();
     });
 } 
-
-function resetInputField () {
-    const content = document.getElementById('content');
-    const parent = document.getElementById('todo-button');
-
-    while(parent.firstChild) {
-        parent.removeChild(parent.lastChild);
-    }
-    parent.parentNode.removeChild(parent.parentNode.lastChild);
-    content.appendChild(addToDoButton());
-}
 
 // 4. Add project button
 
