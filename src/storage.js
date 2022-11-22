@@ -5,7 +5,7 @@ function storeToDos () {
 };
 
 function storeProjects () {
-    localStorage.setItem("projects", JSON.stringify(dataBase.toDos));
+    localStorage.setItem("projects", JSON.stringify(dataBase.projects));
 }
 
 function getToDos () {

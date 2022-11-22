@@ -42,9 +42,25 @@ const dataBase = (() => {
         storeToDos();
     }
 
-    return {toDos, projects, storeProject, storeToDo, updateDate, updateTitle, deleteToDo};
-})();
+    const deleteProject = (index) => {
+        _deleteProjectToDos(projects[index]);
+        projects.splice(index, 1);
+        storeToDos();
+        storeProjects();
+        console.log(toDos);
+        console.log(projects);
+    }
 
-// Initial example project
+    const _deleteProjectToDos = (projectName) => {
+        for (let i = 0; i < toDos.length; i++) {
+            if (toDos[i].project === projectName) {
+                toDos.splice(i, 1) 
+                _deleteProjectToDos(projectName);   
+            }
+        }
+    }
+
+    return {toDos, projects, storeProject, storeToDo, updateDate, updateTitle, deleteToDo, deleteProject};
+})();
 
 export {dataBase};

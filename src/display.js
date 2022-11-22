@@ -38,7 +38,7 @@ function renderContent () {
     while (content.firstChild) {
         content.removeChild(content.lastChild);
     }
-
+    displayProjectList();
     content.appendChild(createHeader());   
     content.appendChild(createToDoList());
     content.appendChild(addToDoButton());
@@ -262,7 +262,6 @@ function projectInputField () {
 
     addButton.addEventListener('click', () => {
         dataBase.storeProject(input.value);
-        displayProjectList();
         resetProjectInputField();
         addProjectButton();
         section = input.value;
@@ -291,20 +290,42 @@ function resetProjectInputField () {
 // 5. Display project list 
 
 function displayProjectList() {
-    const ul = document.getElementById('project-list');
+    const projectList = document.getElementById('project-list');
 
-    while(ul.firstChild) {
-        ul.removeChild(ul.lastChild);
+    while(projectList.firstChild) {
+        projectList.removeChild(projectList.lastChild);
     }
 
     for (let i = 0; i < dataBase.projects.length; i++) {
-        const li = document.createElement('li');
-        li.textContent = `${dataBase.projects[i]}`;
-        li.addEventListener ('click', () => {
+        const project = document.createElement('div');
+        project.classList.add('project');
+        // Name
+        const name = document.createElement('div');
+        name.classList.add('project-name');
+        name.textContent = `${dataBase.projects[i]}`;
+        name.addEventListener ('click', () => {
             section = dataBase.projects[i];
             renderContent();
         })
-        ul.appendChild(li);
+        project.appendChild(name);
+
+        // Delete button
+        const deleteButton = document.createElement('button');
+        deleteButton.textContent = "x";
+        deleteButton.setAttribute('id', 'delete-button');
+        deleteButton.addEventListener ('click', () => {
+            if (i === 0) {
+                section = "All"; 
+            } 
+            else {
+                section = dataBase.projects[i-1];
+            }
+            dataBase.deleteProject(i);
+            renderContent();
+        })
+        project.appendChild(deleteButton);
+
+        projectList.appendChild(project);
     }
 }
 
