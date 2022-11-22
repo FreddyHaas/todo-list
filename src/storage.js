@@ -1,11 +1,19 @@
 import {dataBase} from './dataBase.js'
 
-function storeData () {    
-    window.localStorage.setItem("data", JSON.stringify(dataBase.toDos));
+function storeToDos () {    
+    localStorage.setItem("toDos", JSON.stringify(dataBase.toDos));
 };
 
-function getData () {
-    return window.localStorage.getItem("data");
+function storeProjects () {
+    localStorage.setItem("projects", JSON.stringify(dataBase.toDos));
 }
 
-export {storeData, getData};
+function getToDos () {
+    return JSON.parse(localStorage.getItem("toDos"));
+}
+
+function getProjects () {
+    return JSON.parse(localStorage.getItem("projects"));
+}
+
+export {storeToDos, storeProjects, getToDos, getProjects};
